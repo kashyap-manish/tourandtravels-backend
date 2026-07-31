@@ -10,6 +10,7 @@ const bookingSchema = new Schema({
   email: { type: String, required: true },
   phone: { type: String, required: true },
   specialRequests: { type: String, default: '' },
+  paymentMethod: { type: String, default: '' },
   status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' },
   paymentStatus: { type: String, enum: ['unpaid', 'paid', 'refunded'], default: 'unpaid' },
 }, { timestamps: true });

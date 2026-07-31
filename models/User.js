@@ -8,6 +8,9 @@ const userSchema = new Schema({
   avatar: { type: String, default: '' },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   status: { type: Number, default: 1 },
+  emailVerified: { type: Boolean, default: false },
+  verifyOtp: { type: String, default: null },
+  verifyOtpExpiry: { type: Date, default: null },
 }, { timestamps: true });
 
 module.exports = model('User', userSchema);
