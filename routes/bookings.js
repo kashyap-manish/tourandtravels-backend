@@ -22,7 +22,7 @@ const sendBookingConfirmation = async (booking, tourTitle) => {
         </div>
         <div style="padding:28px 32px">
           <p style="color:#333;font-size:15px">Hi <strong>${booking.name}</strong>,</p>
-          <p style="color:#555">Your booking has been received and is being processed. Here are your details:</p>
+          <p style="color:#555">Your booking has been <strong>confirmed</strong>. Here are your details:</p>
 
           <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px">
             <tr style="background:#fff7ed">

@@ -20,6 +20,8 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/admin/bookings', require('./routes/admin'));
+app.use('/api/newsletter', require('./routes/newsletter'));
+app.use('/api/payment', require('./routes/payment'));
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Pacific backend running on port ${PORT}`));

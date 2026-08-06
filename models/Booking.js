@@ -13,6 +13,7 @@ const bookingSchema = new Schema({
   paymentMethod: { type: String, default: '' },
   status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' },
   paymentStatus: { type: String, enum: ['unpaid', 'paid', 'refunded'], default: 'unpaid' },
+  paymentId: { type: String, default: '' },
 }, { timestamps: true });
 
 module.exports = model('Booking', bookingSchema);
