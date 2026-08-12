@@ -3,6 +3,7 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const auth = require('../middleware/auth');
 const Booking = require('../models/Booking');
+const { sendBookingConfirmation } = require('./bookings');
 
 const getRazorpay = () => new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -42,6 +43,11 @@ router.post('/verify', auth, async (req, res) => {
       { status: 'confirmed', paymentStatus: 'paid', paymentId: razorpay_payment_id },
       { new: true }
     );
+
+    const Tour = require('../models/Tour');
+    const tour = await Tour.findById(booking.tour).select('title');
+    const tourTitle = tour?.title || 'Your Tour';
+    sendBookingConfirmation(booking, tourTitle).catch(err => console.error('Mail error:', err.message));
 
     res.json({ success: true, booking });
   } catch (e) {

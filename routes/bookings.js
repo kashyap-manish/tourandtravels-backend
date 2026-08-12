@@ -78,7 +78,6 @@ router.post('/', auth, async (req, res) => {
       if (found) tourTitle = found.title;
     }
     const booking = await Booking.create({ ...rest, tour, user: req.user.id });
-    sendBookingConfirmation(booking, tourTitle).catch(err => console.error('Mail error:', err.message));
     res.status(201).json(booking);
   } catch (e) {
     res.status(500).json({ message: e.message });
@@ -122,3 +121,4 @@ router.put('/:id/cancel', auth, async (req, res) => {
 });
 
 module.exports = router;
+module.exports.sendBookingConfirmation = sendBookingConfirmation;
