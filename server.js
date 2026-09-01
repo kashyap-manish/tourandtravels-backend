@@ -21,6 +21,7 @@ app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/admin/bookings', require('./routes/admin'));
 app.use('/api/newsletter', require('./routes/newsletter'));
+app.use('/api/search', require('./routes/search'));
 app.use('/api/payment', require('./routes/payment'));
 
 const PORT = process.env.PORT || 5001;
