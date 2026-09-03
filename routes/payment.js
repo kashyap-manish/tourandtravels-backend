@@ -19,7 +19,7 @@ router.post('/order', auth, async (req, res) => {
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
     });
-    res.json({ orderId: order.id, amount: order.amount, currency: order.currency });
+    res.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId: process.env.RAZORPAY_KEY_ID });
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
