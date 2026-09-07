@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Tour = require('../models/Tour');
 const auth = require('../middleware/auth');
 
@@ -16,10 +17,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single tour
+// Get single tour by id or slug
 router.get('/:id', async (req, res) => {
   try {
-    const tour = await Tour.findById(req.params.id);
+    const { id } = req.params;
+    const tour = mongoose.Types.ObjectId.isValid(id)
+      ? await Tour.findById(id)
+      : await Tour.findOne({ slug: id });
     if (!tour) return res.status(404).json({ message: 'Tour not found' });
     res.json(tour);
   } catch (e) {
