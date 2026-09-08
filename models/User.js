@@ -11,6 +11,8 @@ const userSchema = new Schema({
   emailVerified: { type: Boolean, default: false },
   verifyOtp: { type: String, default: null },
   verifyOtpExpiry: { type: Date, default: null },
+  loginOtp: { type: String, default: null },
+  loginOtpExpiry: { type: Date, default: null },
 }, { timestamps: true });
 
 module.exports = model('User', userSchema);
