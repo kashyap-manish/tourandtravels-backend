@@ -57,7 +57,7 @@ const sendOtp = async (identifier, otp, user) => {
   }
 };
 
-// Register
+// Register (customer)
 router.post('/register/customer', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -66,6 +66,28 @@ router.post('/register/customer', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiry = new Date(Date.now() + 10 * 60 * 1000);
     const user = await User.create({ name, email, password: hashed, verifyOtp: otp, verifyOtpExpiry: expiry });
+    await sendOtp(email, otp, user);
+    res.status(201).json({ message: 'OTP sent to your email' });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+// Register (admin) – requires ADMIN_SECRET key
+router.post('/register/admin', async (req, res) => {
+  try {
+    const { name, email, password, adminSecret } = req.body;
+    if (!adminSecret || adminSecret !== process.env.ADMIN_SECRET)
+      return res.status(403).json({ message: 'Invalid admin secret key' });
+    if (await User.findOne({ email })) return res.status(400).json({ message: 'Email already exists' });
+    const hashed = await bcrypt.hash(password, 10);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000);
+    const user = await User.create({
+      name, email, password: hashed,
+      role: 'admin',
+      verifyOtp: otp, verifyOtpExpiry: expiry,
+    });
     await sendOtp(email, otp, user);
     res.status(201).json({ message: 'OTP sent to your email' });
   } catch (e) {

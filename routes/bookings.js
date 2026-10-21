@@ -1,7 +1,18 @@
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Booking = require('../models/Booking');
 const auth = require('../middleware/auth');
+
+const optionalAuth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    try {
+      req.user = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {}
+  }
+  next();
+};
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -62,7 +73,7 @@ const sendBookingConfirmation = async (booking, tourTitle) => {
 };
 
 // Create booking
-router.post('/', auth, async (req, res) => {
+router.post('/', optionalAuth, async (req, res) => {
   try {
     let { tour, tourSlug, ...rest } = req.body;
     let tourTitle = 'Your Tour';
@@ -76,8 +87,14 @@ router.post('/', auth, async (req, res) => {
       const Tour = require('../models/Tour');
       const found = await Tour.findById(tour).select('title');
       if (found) tourTitle = found.title;
+    } else if (rest.origin && rest.destination) {
+      tourTitle = `${rest.origin} → ${rest.destination} (${rest.type || 'Travel'})`;
     }
-    const booking = await Booking.create({ ...rest, tour, user: req.user.id });
+    const booking = await Booking.create({
+      ...rest,
+      tour: tour || undefined,
+      user: req.user?.id || undefined,
+    });
     res.status(201).json(booking);
   } catch (e) {
     res.status(500).json({ message: e.message });
